@@ -3,7 +3,6 @@ import cors from 'cors';
 import connectDB from './config/mongodb.js';
 import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imageRoutes.js';
-
 import 'dotenv/config';
 
 const PORT = process.env.PORT || 3000;
@@ -12,21 +11,24 @@ const app = express();
 app.use(express.json());
 
 const allowedOrigins = [
-  "http://localhost:8000",
-  "https://genify-client-six.vercel.app",
+  "http://localhost:5173",
+  "https://genify-client.vercel.app",
+  "https://genify-client-six.vercel.app"
 ];
 
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://genify-client.vercel.app"
-  ],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
 }));
 
-
 app.get('/', (req, res) => {
-  return res.send("API WORKING");
+  return res.send("API WORKING ✅");
 });
 
 (async () => {
@@ -35,9 +37,9 @@ app.get('/', (req, res) => {
     app.use('/api/user', userRouter);
     app.use('/api/image', imageRouter);
     app.listen(PORT, '0.0.0.0', () => {
-      console.log("Server running on port " + PORT);
+      console.log(`✅ Server running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("Failed to start server:", error);
+    console.error("❌ Failed to start server:", error);
   }
 })();
