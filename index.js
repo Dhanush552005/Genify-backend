@@ -16,8 +16,6 @@ const allowedOrigins = [
   "https://genify-client-six.vercel.app",
 ];
 
-import cors from "cors";
-
 app.use(cors({
   origin: [
     "http://localhost:5173",
