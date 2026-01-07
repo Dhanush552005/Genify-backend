@@ -1,13 +1,12 @@
 import express from "express";
 import cors from "cors";
-import connectDB from "./config/mongodb.js";
 import userRouter from "./routes/userRoutes.js";
 import imageRouter from "./routes/imageRoutes.js";
+import dbMiddleware from "./middleware/db.js";
 import "dotenv/config";
 
 const app = express();
 
-/* Middlewares */
 app.use(express.json());
 
 app.use(
@@ -18,24 +17,19 @@ app.use(
       "https://genify-client-six.vercel.app",
     ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
 app.options("*", cors());
 
-/* Routes */
 app.get("/", (req, res) => {
   res.send("API WORKING ✅");
 });
 
+/* 🔥 ENSURE DB IS READY BEFORE ROUTES */
+app.use(dbMiddleware);
+
 app.use("/api/user", userRouter);
 app.use("/api/image", imageRouter);
-
-/* DB connection (NO top-level await) */
-connectDB()
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Error:", err));
 
 export default app;
