@@ -7,7 +7,7 @@ import "dotenv/config";
 
 const app = express();
 
-
+/* Middlewares */
 app.use(express.json());
 
 app.use(
@@ -25,14 +25,17 @@ app.use(
 
 app.options("*", cors());
 
+/* Routes */
 app.get("/", (req, res) => {
   res.send("API WORKING ✅");
 });
 
-await connectDB();
-
 app.use("/api/user", userRouter);
 app.use("/api/image", imageRouter);
 
+/* DB connection (NO top-level await) */
+connectDB()
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ MongoDB Error:", err));
 
 export default app;
