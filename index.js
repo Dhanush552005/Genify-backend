@@ -22,11 +22,10 @@ app.use(
 
 app.options("*", cors());
 
-/* ✅ Connect DB safely (cached, no crash) */
 connectDB();
 
 app.get("/", (req, res) => {
-  res.send("API WORKING ✅");
+  res.send("API WORKING ");
 });
 
 app.use("/api/user", userRouter);
