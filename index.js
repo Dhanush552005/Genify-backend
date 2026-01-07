@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
+import connectDB from "./config/mongodb.js";
 import userRouter from "./routes/userRoutes.js";
 import imageRouter from "./routes/imageRoutes.js";
-import dbMiddleware from "./middleware/db.js";
 import "dotenv/config";
 
 const app = express();
@@ -22,12 +22,12 @@ app.use(
 
 app.options("*", cors());
 
+/* ✅ Connect DB safely (cached, no crash) */
+connectDB();
+
 app.get("/", (req, res) => {
   res.send("API WORKING ✅");
 });
-
-/* 🔥 ENSURE DB IS READY BEFORE ROUTES */
-app.use(dbMiddleware);
 
 app.use("/api/user", userRouter);
 app.use("/api/image", imageRouter);
